@@ -3,9 +3,10 @@ package player
 type Dimension string
 
 type Position struct {
-	X float64
-	Y float64
-	Z float64
+	X         float64
+	Y         float64
+	Z         float64
+	Dimension Dimension
 }
 
 type Rotation struct {
@@ -14,8 +15,7 @@ type Rotation struct {
 }
 
 type Player struct {
-	Name      string
-	Position  Position
-	Rotation  Rotation
-	Dimension Dimension
+	Name     string
+	Position Position
+	Rotation Rotation
 }

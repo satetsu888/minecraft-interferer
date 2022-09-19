@@ -40,11 +40,11 @@ func (c Client) FetchPlayer(playerName string) (player.Player, error) {
 	if err != nil {
 		return player.Player{}, err
 	}
+	position.Dimension = dimension
 
 	return player.Player{
-		Name:      playerName,
-		Position:  position,
-		Rotation:  rotation,
-		Dimension: dimension,
+		Name:     playerName,
+		Position: position,
+		Rotation: rotation,
 	}, nil
 }
