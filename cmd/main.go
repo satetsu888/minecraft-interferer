@@ -24,16 +24,15 @@ func main() {
 		panic(err)
 	}
 
-	/*
-		resp, err := client.Client.SendCommand("data get entity @p[name=satetsu888]")
-		if err != nil {
-			log.Fatal("error: ", err)
-		}
-		log.Println(resp.Body)
-	*/
+	resp, err := client.Client.SendCommand("data get entity @p[name=satetsu888]")
+	if err != nil {
+		fmt.Printf("%+v", err)
+	}
+	log.Println(resp.Body)
 
 	player, err := client.FetchPlayer(playerName)
 	if err != nil {
+		fmt.Printf("%+v", err)
 		panic(err)
 	}
 	fmt.Printf("%+v", player)

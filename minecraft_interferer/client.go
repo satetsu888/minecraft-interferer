@@ -1,7 +1,7 @@
 package minecraft_interferer
 
 import (
-	"log"
+	"fmt"
 	"regexp"
 	"strconv"
 
@@ -17,77 +17,106 @@ func NewClient(hostport string, rconPassword string) (*Client, error) {
 		Hostport: hostport,
 	})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create client: %w", err)
 	}
 	if err := client.Authenticate(rconPassword); err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	return &Client{Client: client}, nil
 }
 
-func (c *Client) FetchPlayer(playerName string) (Player, error) {
+func (c Client) FetchPlayerPosition(playerName string) (Position, error) {
 	baseReg := regexp.MustCompile(`(?P<playerName>\S+) has the following entity data: (?P<data>.+)`)
 
-	// get position
 	res, err := c.Client.SendCommand("data get entity @p[name=" + playerName + "] Pos")
 	if err != nil {
-		return Player{}, err
+		return Position{}, fmt.Errorf("failed to fetch player Pos: %w", err)
 	}
 	result := baseReg.FindAllStringSubmatch(res.Body, -1)
-	name := result[0][1]
+	data := result[0][2]
 
 	positionReg := regexp.MustCompile(`\[(?P<x>\S+)d, (?P<y>\S+)d, (?P<z>\S+)d\]`)
-	result = positionReg.FindAllStringSubmatch(res.Body, -1)
+	result = positionReg.FindAllStringSubmatch(data, -1)
 	x, err := strconv.ParseFloat(result[0][1], 64)
 	if err != nil {
-		return Player{}, err
+		return Position{}, err
 	}
 	y, err := strconv.ParseFloat(result[0][2], 64)
 	if err != nil {
-		return Player{}, err
+		return Position{}, err
 	}
 	z, err := strconv.ParseFloat(result[0][3], 64)
 	if err != nil {
-		return Player{}, err
+		return Position{}, err
 	}
+	return Position{
+		X: x,
+		Y: y,
+		Z: z,
+	}, nil
+}
 
-	// get direction
-	res, err = c.Client.SendCommand("data get entity @p[name=" + playerName + "] Rotation")
+func (c Client) FetchPlayerRotation(playerName string) (Rotation, error) {
+	baseReg := regexp.MustCompile(`(?P<playerName>\S+) has the following entity data: (?P<data>.+)`)
+
+	res, err := c.Client.SendCommand("data get entity @p[name=" + playerName + "] Rotation")
 	if err != nil {
-		return Player{}, err
+		return Rotation{}, fmt.Errorf("failed to fetch player Rotation: %w", err)
 	}
-	result = baseReg.FindAllStringSubmatch(res.Body, -1)
+	result := baseReg.FindAllStringSubmatch(res.Body, -1)
 	data := result[0][2]
-	rotationReg := regexp.MustCompile(`\[(?P<pitch>\S+)f, (?P<yow>\S+)f\]`)
+
+	rotationReg := regexp.MustCompile(`\[(?P<yaw>\S+)f, (?P<pitch>\S+)f\]`)
 	result = rotationReg.FindAllStringSubmatch(data, -1)
-	yow, err := strconv.ParseFloat(result[0][1], 64)
+	yaw, err := strconv.ParseFloat(result[0][1], 64)
 	if err != nil {
-		return Player{}, err
+		return Rotation{}, err
 	}
 	pitch, err := strconv.ParseFloat(result[0][2], 64)
 	if err != nil {
-		return Player{}, err
+		return Rotation{}, err
 	}
+	return Rotation{
+		Yaw:   yaw,
+		Pitch: pitch,
+	}, nil
+}
 
-	// get dimension
-	res, err = c.Client.SendCommand("data get entity @p[name=" + playerName + "] Dimension")
+func (c Client) FetchPlayerDimention(playerName string) (Dimension, error) {
+	baseReg := regexp.MustCompile(`(?P<playerName>\S+) has the following entity data: (?P<data>.+)`)
+
+	res, err := c.Client.SendCommand("data get entity @p[name=" + playerName + "] Dimension")
+	if err != nil {
+		return Dimension(""), fmt.Errorf("failed to fetch player Dimension: %w", err)
+	}
+	result := baseReg.FindAllStringSubmatch(res.Body, -1)
+	data := result[0][2]
+
+	dimensionReg := regexp.MustCompile(`(?P<dimension>\S+)`)
+	result = dimensionReg.FindAllStringSubmatch(data, -1)
+	return Dimension(result[0][1]), nil
+}
+
+func (c Client) FetchPlayer(playerName string) (Player, error) {
+	position, err := c.FetchPlayerPosition(playerName)
 	if err != nil {
 		return Player{}, err
 	}
-	result = baseReg.FindAllStringSubmatch(res.Body, -1)
-	dimension := result[0][2]
+
+	rotation, err := c.FetchPlayerRotation(playerName)
+	if err != nil {
+		return Player{}, err
+	}
+
+	dimension, err := c.FetchPlayerDimention(playerName)
+	if err != nil {
+		return Player{}, err
+	}
 
 	return Player{
-		Name: name,
-		Position: Position{
-			X: x,
-			Y: y,
-			Z: z,
-		},
-		Rotation: Rotation{
-			Yaw:   yow,
-			Pitch: pitch,
-		},
-		Dimension: Dimension(dimension),
+		Name:      playerName,
+		Position:  position,
+		Rotation:  rotation,
+		Dimension: dimension,
 	}, nil
 }
