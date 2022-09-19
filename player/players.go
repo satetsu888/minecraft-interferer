@@ -1,4 +1,4 @@
-package minecraft_interferer
+package player
 
 type Dimension string
 

@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	"github.com/satetsu888/minecraft-interferer/minecraft_interferer"
+	"github.com/satetsu888/minecraft-interferer/client"
 )
 
 func main() {
@@ -19,7 +19,7 @@ func main() {
 	rconPassowrd := os.Getenv("RCON_PASSWORD")
 	playerName := os.Getenv("PLAYER_NAME")
 
-	client, err := minecraft_interferer.NewClient(rconHostPort, rconPassowrd)
+	client, err := client.NewClient(rconHostPort, rconPassowrd)
 	if err != nil {
 		panic(err)
 	}
