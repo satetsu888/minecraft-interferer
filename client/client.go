@@ -52,15 +52,15 @@ func (c Client) FetchPlayer(playerName string) (model.Player, error) {
 	}, nil
 }
 
-func (c Client) BuildBlocks(x, y, z int, blocks [][][]bool, blockName string) error {
+func (c Client) BuildBlocks(x, y, z int, blocks [][][]string) error {
 	wg := new(sync.WaitGroup)
 	for i := 0; i < len(blocks); i++ {
 		wg.Add(1)
 		go func(i int) error {
 			for j := 0; j < len(blocks[i]); j++ {
 				for k := 0; k < len(blocks[i][j]); k++ {
-					if blocks[i][j][k] {
-						err := command.SetBlock(c.Client, x+i, y+j, z+k, blockName)
+					if blocks[i][j][k] != "" {
+						err := command.SetBlock(c.Client, x+i, y+j, z+k, blocks[i][j][k])
 						if err != nil {
 							return err
 						}
@@ -79,19 +79,19 @@ func (c Client) FillBlocks(x1, y1, z1, x2, y2, z2 int, blockName string) error {
 	return command.FillBlock(c.Client, x1, y1, z1, x2, y2, z2, blockName)
 }
 
-func (c Client) BuildMaze(x, y, z, blockX, blockZ, height, roadWidth int) error {
+func (c Client) BuildMaze(x, y, z, blockX, blockZ, height, roadWidth int, blockName string) error {
 	wallWidth := 1
 	sizeX := blockX*(roadWidth+wallWidth) + wallWidth
 	sizeZ := blockZ*(roadWidth+wallWidth) + wallWidth
-	blocks := make([][][]bool, sizeX)
+	blocks := make([][][]string, sizeX)
 
 	// fill bloocks
 	for i := 0; i < sizeX; i++ {
-		blocks[i] = make([][]bool, height)
+		blocks[i] = make([][]string, height)
 		for j := 0; j < height; j++ {
-			blocks[i][j] = make([]bool, sizeZ)
+			blocks[i][j] = make([]string, sizeZ)
 			for k := 0; k < sizeZ; k++ {
-				blocks[i][j][k] = true
+				blocks[i][j][k] = blockName
 			}
 		}
 	}
@@ -114,25 +114,25 @@ func (c Client) BuildMaze(x, y, z, blockX, blockZ, height, roadWidth int) error 
 				// center of maze blocks
 				for lx := 0; lx < roadWidth; lx++ {
 					for ly := 0; ly < roadWidth; ly++ {
-						blocks[X+lx][h][Y+ly] = false
+						blocks[X+lx][h][Y+ly] = ""
 					}
 				}
 				// right and left walls
 				for lx := 0; lx < roadWidth; lx++ {
 					if right {
-						blocks[X+lx][h][Y+roadWidth] = false
+						blocks[X+lx][h][Y+roadWidth] = ""
 					}
 					if left {
-						blocks[X+lx][h][Y-wallWidth] = false
+						blocks[X+lx][h][Y-wallWidth] = ""
 					}
 				}
 				// up and down walls
 				for ly := 0; ly < roadWidth; ly++ {
 					if up {
-						blocks[X-wallWidth][h][Y+ly] = false
+						blocks[X-wallWidth][h][Y+ly] = ""
 					}
 					if down {
-						blocks[X+roadWidth][h][Y+ly] = false
+						blocks[X+roadWidth][h][Y+ly] = ""
 					}
 				}
 			}
@@ -142,6 +142,6 @@ func (c Client) BuildMaze(x, y, z, blockX, blockZ, height, roadWidth int) error 
 	}
 
 	c.FillBlocks(x, y, z, x+sizeX-1, y+height-1, z+sizeZ-1, "minecraft:air")
-	c.BuildBlocks(x, y, z, blocks, "minecraft:stone")
+	c.BuildBlocks(x, y, z, blocks)
 	return nil
 }
