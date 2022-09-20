@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/satetsu888/minecraft-interferer/model"
+	"github.com/satetsu888/minecraft-rcon-builder/model"
 	"github.com/willroberts/minecraft-client"
 )
 

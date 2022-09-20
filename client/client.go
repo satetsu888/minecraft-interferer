@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/satetsu888/minecraft-interferer/client/command"
-	"github.com/satetsu888/minecraft-interferer/client/query"
-	"github.com/satetsu888/minecraft-interferer/model"
+	"github.com/satetsu888/minecraft-rcon-builder/client/command"
+	"github.com/satetsu888/minecraft-rcon-builder/client/query"
+	"github.com/satetsu888/minecraft-rcon-builder/model"
 	"github.com/willroberts/minecraft-client"
 )
 

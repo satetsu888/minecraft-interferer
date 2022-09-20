@@ -7,7 +7,7 @@ import (
 
 	"github.com/itchyny/maze"
 	"github.com/joho/godotenv"
-	"github.com/satetsu888/minecraft-interferer/client"
+	"github.com/satetsu888/minecraft-rcon-builder/client"
 )
 
 func main() {
