@@ -1,8 +1,10 @@
 package client
 
 import (
+	"context"
 	"fmt"
-	"sync"
+
+	"golang.org/x/sync/errgroup"
 
 	"github.com/itchyny/maze"
 	"github.com/satetsu888/minecraft-rcon-builder/client/command"
@@ -53,25 +55,28 @@ func (c Client) FetchPlayer(playerName string) (model.Player, error) {
 }
 
 func (c Client) BuildBlocks(x, y, z int, blocks [][][]string) error {
-	wg := new(sync.WaitGroup)
+	eg, ctx := errgroup.WithContext(context.Background())
 	for i := 0; i < len(blocks); i++ {
-		wg.Add(1)
-		go func(i int) error {
+		i := i
+		eg.Go(func() error {
 			for j := 0; j < len(blocks[i]); j++ {
 				for k := 0; k < len(blocks[i][j]); k++ {
 					if blocks[i][j][k] != "" {
 						err := command.SetBlock(c.Client, x+i, y+j, z+k, blocks[i][j][k])
 						if err != nil {
+							ctx.Err()
 							return err
 						}
 					}
 				}
 			}
-			wg.Done()
+			ctx.Done()
 			return nil
-		}(i)
+		})
 	}
-	wg.Wait()
+	if err := eg.Wait(); err != nil {
+		return err
+	}
 	return nil
 }
 

@@ -7,4 +7,6 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/stretchr/testify v1.7.0 h1:nwc3DEeHmmLAfoZucVR881uASk0Mfjw8xYJ99tb5CcY=
 github.com/willroberts/minecraft-client v1.1.1-0.20220812161436-f4880f9efcd0 h1:a3T6iNqPjsVAF8z5jeois6A65pIJSbj5yLlxUk29hjk=
 github.com/willroberts/minecraft-client v1.1.1-0.20220812161436-f4880f9efcd0/go.mod h1:MmYKZngnRArEn8SzI6zUIq/X4x/z/kttjHgaPmwRCcE=
+golang.org/x/sync v0.0.0-20220907140024-f12130a52804 h1:0SH2R3f1b1VmIMG7BXbEZCBUu2dKmHschSmjqGUrW8A=
+golang.org/x/sync v0.0.0-20220907140024-f12130a52804/go.mod h1:RxMgew5VJxzue5/jJTE5uejpjVlOe/izrB70Jof72aM=
 gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c h1:dUUwHk2QECo/6vqA44rthZ8ie2QXMNeKRTHCNY2nXvo=
