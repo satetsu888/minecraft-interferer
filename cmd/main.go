@@ -41,9 +41,16 @@ func main() {
 
 	pos := player.Position()
 
-	err = client.BuildMaze(pos.X+5, pos.Y, pos.Z, 5, 5, 3, 4, "minecraft:stone")
+	err = client.BuildMaze(pos.X+5, pos.Y, pos.Z, 5, 5, 2, 4, "minecraft:stone")
 	if err != nil {
 		fmt.Printf("%+v", err)
 		panic(err)
 	}
+	/*
+		err = client.FillBlocks(pos.X, pos.Y, pos.Z, pos.X+30, pos.Y+20, pos.Z-30, "minecraft:air")
+		if err != nil {
+			fmt.Printf("%+v", err)
+			panic(err)
+		}
+	*/
 }
