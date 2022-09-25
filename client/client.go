@@ -30,6 +30,10 @@ func NewClient(hostport string, rconPassword string) (*Client, error) {
 	return &Client{Client: client}, nil
 }
 
+func (c Client) FetchPlayerList() (count int, maxCount int, playerList []string, err error) {
+	return query.FetchPlayerList(c.Client)
+}
+
 func (c Client) FetchPlayer(playerName string) (model.Player, error) {
 	rawPosition, err := query.FetchPlayerRawPosition(c.Client, playerName)
 	if err != nil {

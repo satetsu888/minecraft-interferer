@@ -9,6 +9,26 @@ import (
 	"github.com/willroberts/minecraft-client"
 )
 
+func FetchPlayerList(c *minecraft.Client) (count int, maxCount int, playerList []string, err error) {
+	reg := regexp.MustCompile(`There are (?P<count>\S+) of a max of (?P<maxCount>\S+) players online: (?P<players>.+)`)
+
+	res, err := c.SendCommand("list")
+	if err != nil {
+		return 0, 0, nil, fmt.Errorf("failed to fetch player list: %w", err)
+	}
+	result := reg.FindAllStringSubmatch(res.Body, -1)
+	count, err = strconv.Atoi(result[0][1])
+	if err != nil {
+		return 0, 0, nil, err
+	}
+	maxCount, err = strconv.Atoi(result[0][2])
+	if err != nil {
+		return 0, 0, nil, err
+	}
+	playerList = regexp.MustCompile(`, `).Split(result[0][3], -1)
+	return
+}
+
 func FetchPlayerRawPosition(c *minecraft.Client, playerName string) (model.RawPosition, error) {
 	reg := regexp.MustCompile(`(?P<playerName>\S+) has the following entity data: \[(?P<x>\S+)d, (?P<y>\S+)d, (?P<z>\S+)d\]`)
 

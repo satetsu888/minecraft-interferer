@@ -38,14 +38,17 @@ func main() {
 		panic(err)
 	}
 	fmt.Printf("%+v", player)
+	fmt.Println()
 
-	pos := player.Position()
+	// pos := player.Position()
 
-	err = client.BuildMaze(pos.X+5, pos.Y, pos.Z, 5, 5, 2, 4, "minecraft:stone")
-	if err != nil {
-		fmt.Printf("%+v", err)
-		panic(err)
-	}
+	/*
+		err = client.BuildMaze(pos.X+5, pos.Y, pos.Z, 5, 5, 2, 4, "minecraft:stone")
+		if err != nil {
+			fmt.Printf("%+v", err)
+			panic(err)
+		}
+	*/
 	/*
 		err = client.FillBlocks(pos.X, pos.Y, pos.Z, pos.X+30, pos.Y+20, pos.Z-30, "minecraft:air")
 		if err != nil {
@@ -53,4 +56,13 @@ func main() {
 			panic(err)
 		}
 	*/
+	count, maxCouont, playerList, err := client.FetchPlayerList()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%+v", count)
+	fmt.Println()
+	fmt.Printf("%+v", maxCouont)
+	fmt.Println()
+	fmt.Printf("%+v", playerList)
 }
