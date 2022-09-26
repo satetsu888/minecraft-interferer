@@ -38,6 +38,7 @@ func main() {
 		panic(err)
 	}
 	fmt.Printf("%+v", player)
+	fmt.Printf("%+v", player.Direction())
 	fmt.Println()
 
 	// pos := player.Position()

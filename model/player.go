@@ -4,6 +4,15 @@ import "math"
 
 type Dimension string
 
+type Direction string
+
+const (
+	North Direction = "north"
+	South Direction = "south"
+	East  Direction = "east"
+	West  Direction = "west"
+)
+
 type RawPosition struct {
 	X         float64
 	Y         float64
@@ -38,5 +47,17 @@ func (p Player) Position() Position {
 		Y:         y,
 		Z:         z,
 		Dimension: p.RawPosition.Dimension,
+	}
+}
+
+func (p Player) Direction() Direction {
+	if p.Rotation.Yaw >= -45 && p.Rotation.Yaw < 45 {
+		return South
+	} else if p.Rotation.Yaw >= 45 && p.Rotation.Yaw < 135 {
+		return West
+	} else if p.Rotation.Yaw >= 135 || p.Rotation.Yaw < -135 {
+		return North
+	} else {
+		return East
 	}
 }
