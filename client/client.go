@@ -58,6 +58,10 @@ func (c Client) FetchPlayer(playerName string) (model.Player, error) {
 	}, nil
 }
 
+func (c Client) SendChat(message string) error {
+	return command.SendChat(c.Client, message)
+}
+
 func (c Client) BuildBlocks(x, y, z int, blocks [][][]string) error {
 	eg, ctx := errgroup.WithContext(context.Background())
 	for i := 0; i < len(blocks); i++ {

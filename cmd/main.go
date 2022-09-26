@@ -56,13 +56,20 @@ func main() {
 			panic(err)
 		}
 	*/
-	count, maxCouont, playerList, err := client.FetchPlayerList()
+	/*
+		count, maxCouont, playerList, err := client.FetchPlayerList()
+		if err != nil {
+			panic(err)
+		}
+		fmt.Printf("%+v", count)
+		fmt.Println()
+		fmt.Printf("%+v", maxCouont)
+		fmt.Println()
+		fmt.Printf("%+v", playerList)
+	*/
+
+	err = client.SendChat("Hello, world!")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("%+v", count)
-	fmt.Println()
-	fmt.Printf("%+v", maxCouont)
-	fmt.Println()
-	fmt.Printf("%+v", playerList)
 }
