@@ -2,31 +2,6 @@ package model
 
 import "math"
 
-type Dimension string
-
-type Direction string
-
-const (
-	North Direction = "north"
-	South Direction = "south"
-	East  Direction = "east"
-	West  Direction = "west"
-)
-
-type RawPosition struct {
-	X         float64
-	Y         float64
-	Z         float64
-	Dimension Dimension
-}
-
-type Position struct {
-	X         int
-	Y         int
-	Z         int
-	Dimension Dimension
-}
-
 type Rotation struct {
 	Yaw   float64
 	Pitch float64

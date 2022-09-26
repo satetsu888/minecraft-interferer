@@ -62,7 +62,10 @@ func (c Client) SendChat(message string) error {
 	return command.SendChat(c.Client, message)
 }
 
-func (c Client) BuildBlocks(x, y, z int, blocks [][][]string) error {
+func (c Client) BuildBlocks(pos model.Position, facing model.Direction, blocks [][][]string) error {
+	x := pos.X
+	y := pos.Y
+	z := pos.Z
 	eg, ctx := errgroup.WithContext(context.Background())
 	for i := 0; i < len(blocks); i++ {
 		i := i
@@ -92,7 +95,10 @@ func (c Client) FillBlocks(x1, y1, z1, x2, y2, z2 int, blockName string) error {
 	return command.FillBlock(c.Client, x1, y1, z1, x2, y2, z2, blockName)
 }
 
-func (c Client) BuildMaze(x, y, z, blockX, blockZ, height, roadWidth int, blockName string) error {
+func (c Client) BuildMaze(pos model.Position, blockX, blockZ, height, roadWidth int, blockName string) error {
+	x := pos.X
+	y := pos.Y
+	z := pos.Z
 	wallWidth := 1
 	sizeX := blockX*(roadWidth+wallWidth) + wallWidth
 	sizeZ := blockZ*(roadWidth+wallWidth) + wallWidth
@@ -155,6 +161,6 @@ func (c Client) BuildMaze(x, y, z, blockX, blockZ, height, roadWidth int, blockN
 	}
 
 	c.FillBlocks(x, y, z, x+sizeX-1, y+height-1, z+sizeZ-1, "minecraft:air")
-	c.BuildBlocks(x, y, z, blocks)
+	c.BuildBlocks(pos, model.Direction("south"), blocks)
 	return nil
 }

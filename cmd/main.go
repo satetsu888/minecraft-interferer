@@ -17,7 +17,8 @@ func main() {
 
 	rconHostPort := os.Getenv("RCON_HOSTPORT")
 	rconPassowrd := os.Getenv("RCON_PASSWORD")
-	playerName := os.Getenv("PLAYER_NAME")
+	// playerName := os.Getenv("PLAYER_NAME")
+	playerName := "satetsu888"
 
 	client, err := client.NewClient(rconHostPort, rconPassowrd)
 	if err != nil {
@@ -40,6 +41,16 @@ func main() {
 	fmt.Printf("%+v", player)
 	fmt.Printf("%+v", player.Direction())
 	fmt.Println()
+
+	blocks := make([][][]string, 1)
+	blocks[0] = make([][]string, 1)
+	blocks[0][0] = make([]string, 1)
+	blocks[0][0][0] = "minecraft:stone"
+	err = client.BuildBlocks(player.Position().GetRelative(0, 0, 1, player.Direction()), player.Direction(), blocks)
+	if err != nil {
+		fmt.Printf("%+v", err)
+		panic(err)
+	}
 
 	// pos := player.Position()
 
@@ -69,8 +80,10 @@ func main() {
 		fmt.Printf("%+v", playerList)
 	*/
 
-	err = client.SendChat("Hello, world!")
-	if err != nil {
-		panic(err)
-	}
+	/*
+		err = client.SendChat("Hello, world!")
+		if err != nil {
+			panic(err)
+		}
+	*/
 }
