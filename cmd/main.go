@@ -7,6 +7,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/satetsu888/minecraft-rcon-builder/client"
+	"github.com/satetsu888/minecraft-rcon-builder/model"
 )
 
 func main() {
@@ -42,15 +43,20 @@ func main() {
 	fmt.Printf("%+v", player.Direction())
 	fmt.Println()
 
-	blocks := [][][]string{
-		{{"", "", "minecraft:stone", "", ""}},
-		{{"", "", "", "minecraft:stone", ""}},
-		{{"minecraft:stone", "minecraft:stone", "minecraft:stone", "minecraft:stone", "minecraft:green_wool"}},
-		{{"", "", "", "minecraft:stone", ""}},
-		{{"", "", "minecraft:stone", "", ""}},
+	blocks := [][][]model.Block{
+		{{model.Block{}, model.Block{}, model.Block{BlockName: "minecraft:stone"}, model.Block{}, model.Block{}}},
+		{{model.Block{}, model.Block{}, model.Block{}, model.Block{BlockName: "minecraft:stone"}, model.Block{}}},
+		{{model.Block{BlockName: "minecraft:stone"}, model.Block{BlockName: "minecraft:stone"}, model.Block{BlockName: "minecraft:stone"}, model.Block{BlockName: "minecraft:stone"}, model.Block{BlockName: "minecraft:green_wool"}}},
+		{{model.Block{}, model.Block{}, model.Block{}, model.Block{BlockName: "minecraft:stone"}, model.Block{}}},
+		{{model.Block{}, model.Block{}, model.Block{BlockName: "minecraft:stone"}, model.Block{}, model.Block{}}},
 	}
 
-	err = client.BuildBlocks(player.Position().GetRelative(0, 0, 1, player.Direction()), player.Direction(), blocks)
+	structure := model.Structure{
+		BasePoint: model.Vec3{X: 2, Y: 0, Z: 0},
+		Blocks:    blocks,
+	}
+
+	err = client.BuildBlocks(player.Position().GetRelative(0, 0, 1, player.Direction()), player.Direction(), structure)
 	if err != nil {
 		fmt.Printf("%+v", err)
 		panic(err)

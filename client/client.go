@@ -62,16 +62,17 @@ func (c Client) SendChat(message string) error {
 	return command.SendChat(c.Client, message)
 }
 
-func (c Client) BuildBlocks(pos model.Position, facing model.Direction, blocks [][][]string) error {
+func (c Client) BuildBlocks(pos model.Position, facing model.Direction, structure model.Structure) error {
+	blocks := structure.Blocks
 	eg, ctx := errgroup.WithContext(context.Background())
 	for i := 0; i < len(blocks); i++ {
 		i := i
 		eg.Go(func() error {
 			for j := 0; j < len(blocks[i]); j++ {
 				for k := 0; k < len(blocks[i][j]); k++ {
-					if blocks[i][j][k] != "" {
-						relatevePos := pos.GetRelative(i, j, k, facing)
-						err := command.SetBlock(c.Client, relatevePos.X, relatevePos.Y, relatevePos.Z, blocks[i][j][k])
+					if !blocks[i][j][k].IsNull() {
+						relatevePos := pos.GetRelative(i-structure.BasePoint.X, j-structure.BasePoint.Y, k-structure.BasePoint.Z, facing)
+						err := command.SetBlock(c.Client, relatevePos.X, relatevePos.Y, relatevePos.Z, blocks[i][j][k].BlockName)
 						if err != nil {
 							ctx.Err()
 							return err
@@ -100,15 +101,15 @@ func (c Client) BuildMaze(pos model.Position, blockX, blockZ, height, roadWidth 
 	wallWidth := 1
 	sizeX := blockX*(roadWidth+wallWidth) + wallWidth
 	sizeZ := blockZ*(roadWidth+wallWidth) + wallWidth
-	blocks := make([][][]string, sizeX)
+	blocks := make([][][]model.Block, sizeX)
 
 	// fill bloocks
 	for i := 0; i < sizeX; i++ {
-		blocks[i] = make([][]string, height)
+		blocks[i] = make([][]model.Block, height)
 		for j := 0; j < height; j++ {
-			blocks[i][j] = make([]string, sizeZ)
+			blocks[i][j] = make([]model.Block, sizeZ)
 			for k := 0; k < sizeZ; k++ {
-				blocks[i][j][k] = blockName
+				blocks[i][j][k] = model.Block{BlockName: blockName}
 			}
 		}
 	}
@@ -131,25 +132,25 @@ func (c Client) BuildMaze(pos model.Position, blockX, blockZ, height, roadWidth 
 				// center of maze blocks
 				for lx := 0; lx < roadWidth; lx++ {
 					for ly := 0; ly < roadWidth; ly++ {
-						blocks[X+lx][h][Y+ly] = ""
+						blocks[X+lx][h][Y+ly] = model.Block{}
 					}
 				}
 				// right and left walls
 				for lx := 0; lx < roadWidth; lx++ {
 					if right {
-						blocks[X+lx][h][Y+roadWidth] = ""
+						blocks[X+lx][h][Y+roadWidth] = model.Block{}
 					}
 					if left {
-						blocks[X+lx][h][Y-wallWidth] = ""
+						blocks[X+lx][h][Y-wallWidth] = model.Block{}
 					}
 				}
 				// up and down walls
 				for ly := 0; ly < roadWidth; ly++ {
 					if up {
-						blocks[X-wallWidth][h][Y+ly] = ""
+						blocks[X-wallWidth][h][Y+ly] = model.Block{}
 					}
 					if down {
-						blocks[X+roadWidth][h][Y+ly] = ""
+						blocks[X+roadWidth][h][Y+ly] = model.Block{}
 					}
 				}
 			}
@@ -159,6 +160,6 @@ func (c Client) BuildMaze(pos model.Position, blockX, blockZ, height, roadWidth 
 	}
 
 	c.FillBlocks(x, y, z, x+sizeX-1, y+height-1, z+sizeZ-1, "minecraft:air")
-	c.BuildBlocks(pos, model.Direction("south"), blocks)
+	c.BuildBlocks(pos, model.Direction("south"), model.Structure{BasePoint: model.Vec3{X: 0, Y: 0, Z: 0}, Blocks: blocks})
 	return nil
 }
