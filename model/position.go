@@ -28,7 +28,7 @@ func (p Position) GetRelative(x, y, z int, direction Direction) Position {
 	switch direction {
 	case North:
 		return Position{
-			X:         p.X + x,
+			X:         p.X - x,
 			Y:         p.Y + y,
 			Z:         p.Z - z,
 			Dimension: p.Dimension,
@@ -42,14 +42,14 @@ func (p Position) GetRelative(x, y, z int, direction Direction) Position {
 		}
 	case East:
 		return Position{
-			X:         p.X - z,
+			X:         p.X + z,
 			Y:         p.Y + y,
-			Z:         p.Z + x,
+			Z:         p.Z - x,
 			Dimension: p.Dimension,
 		}
 	case West:
 		return Position{
-			X:         p.X + z,
+			X:         p.X - z,
 			Y:         p.Y + y,
 			Z:         p.Z + x,
 			Dimension: p.Dimension,

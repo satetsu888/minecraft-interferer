@@ -63,9 +63,6 @@ func (c Client) SendChat(message string) error {
 }
 
 func (c Client) BuildBlocks(pos model.Position, facing model.Direction, blocks [][][]string) error {
-	x := pos.X
-	y := pos.Y
-	z := pos.Z
 	eg, ctx := errgroup.WithContext(context.Background())
 	for i := 0; i < len(blocks); i++ {
 		i := i
@@ -73,7 +70,8 @@ func (c Client) BuildBlocks(pos model.Position, facing model.Direction, blocks [
 			for j := 0; j < len(blocks[i]); j++ {
 				for k := 0; k < len(blocks[i][j]); k++ {
 					if blocks[i][j][k] != "" {
-						err := command.SetBlock(c.Client, x+i, y+j, z+k, blocks[i][j][k])
+						relatevePos := pos.GetRelative(i, j, k, facing)
+						err := command.SetBlock(c.Client, relatevePos.X, relatevePos.Y, relatevePos.Z, blocks[i][j][k])
 						if err != nil {
 							ctx.Err()
 							return err

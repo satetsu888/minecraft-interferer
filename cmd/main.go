@@ -42,10 +42,14 @@ func main() {
 	fmt.Printf("%+v", player.Direction())
 	fmt.Println()
 
-	blocks := make([][][]string, 1)
-	blocks[0] = make([][]string, 1)
-	blocks[0][0] = make([]string, 1)
-	blocks[0][0][0] = "minecraft:stone"
+	blocks := [][][]string{
+		{{"", "", "minecraft:stone", "", ""}},
+		{{"", "", "", "minecraft:stone", ""}},
+		{{"minecraft:stone", "minecraft:stone", "minecraft:stone", "minecraft:stone", "minecraft:green_wool"}},
+		{{"", "", "", "minecraft:stone", ""}},
+		{{"", "", "minecraft:stone", "", ""}},
+	}
+
 	err = client.BuildBlocks(player.Position().GetRelative(0, 0, 1, player.Direction()), player.Direction(), blocks)
 	if err != nil {
 		fmt.Printf("%+v", err)
