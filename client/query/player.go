@@ -10,7 +10,7 @@ import (
 )
 
 func FetchPlayerList(c *minecraft.Client) (count int, maxCount int, playerList []string, err error) {
-	reg := regexp.MustCompile(`There are (?P<count>\S+) of a max of (?P<maxCount>\S+) players online: (?P<players>.+)`)
+	reg := regexp.MustCompile(`There are (?P<count>\S+) of a max of (?P<maxCount>\S+) players online: (?P<players>.*)`)
 
 	res, err := c.SendCommand("list")
 	if err != nil {
@@ -25,7 +25,11 @@ func FetchPlayerList(c *minecraft.Client) (count int, maxCount int, playerList [
 	if err != nil {
 		return 0, 0, nil, err
 	}
-	playerList = regexp.MustCompile(`, `).Split(result[0][3], -1)
+	if result[0][3] != "" {
+		playerList = regexp.MustCompile(`, `).Split(result[0][3], -1)
+	} else {
+		playerList = []string{}
+	}
 	return
 }
 
