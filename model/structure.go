@@ -15,10 +15,10 @@ type Block struct {
 	State     BlockState
 }
 type BlockState struct {
-	Axis    string // x, y, z
-	Facinig string // north, south, west, east, up, down
-	Type    string // for half block: top, bottom, double
-	Half    string // for trap door: top, bottom
+	Axis   string // x, y, z
+	Facing string // north, south, west, east, up, down
+	Type   string // for half block: top, bottom, double
+	Half   string // for trap door: top, bottom
 }
 
 func (b Block) IsNull() bool {
@@ -33,8 +33,8 @@ func (b Block) GetRelativeString(facing Direction) string {
 		states = append(states, "axis="+relativeAxis)
 	}
 
-	if b.State.Facinig != "" {
-		relativeFacing := relativeFacing(b.State.Facinig, facing)
+	if b.State.Facing != "" {
+		relativeFacing := relativeFacing(b.State.Facing, facing)
 		states = append(states, "facing="+relativeFacing)
 	}
 
