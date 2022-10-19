@@ -11,7 +11,7 @@ func FillBlock(c *minecraft.Client, x1, y1, z1, x2, y2, z2 int, blockName string
 	return err
 }
 
-func SetBlock(c *minecraft.Client, x, y, z int, blockName string) error {
-	_, err := c.SendCommand(fmt.Sprintf("setblock %d %d %d %s", x, y, z, blockName))
+func SetBlock(c *minecraft.Client, x, y, z int, blockString string) error {
+	_, err := c.SendCommand(fmt.Sprintf("setblock %d %d %d %s", x, y, z, blockString))
 	return err
 }

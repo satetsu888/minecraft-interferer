@@ -72,7 +72,7 @@ func (c Client) BuildBlocks(pos model.Position, facing model.Direction, structur
 				for k := 0; k < len(blocks[i][j]); k++ {
 					if !blocks[i][j][k].IsNull() {
 						relatevePos := pos.GetRelative(i-structure.BasePoint.X, j-structure.BasePoint.Y, k-structure.BasePoint.Z, facing)
-						err := command.SetBlock(c.Client, relatevePos.X, relatevePos.Y, relatevePos.Z, blocks[i][j][k].BlockName)
+						err := command.SetBlock(c.Client, relatevePos.X, relatevePos.Y, relatevePos.Z, blocks[i][j][k].GetRelativeString(facing))
 						if err != nil {
 							ctx.Err()
 							return err
