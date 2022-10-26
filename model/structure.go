@@ -18,7 +18,8 @@ type BlockState struct {
 	Axis   string // x, y, z
 	Facing string // north, south, west, east, up, down
 	Type   string // for half block: top, bottom, double
-	Half   string // for trap door: top, bottom
+	Half   string // for stairs, trap door: top, bottom
+	Shape  string // for stairs: inner_left, inner_right, outer_left, outer_right, straight
 }
 
 func (b Block) IsNull() bool {
@@ -44,6 +45,10 @@ func (b Block) GetRelativeString(facing Direction) string {
 
 	if b.State.Half != "" {
 		states = append(states, "half="+b.State.Half)
+	}
+
+	if b.State.Shape != "" {
+		states = append(states, "shape="+b.State.Shape)
 	}
 
 	if len(states) > 0 {
